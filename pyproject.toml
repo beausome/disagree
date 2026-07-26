@@ -1,0 +1,41 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "disagree"
+version = "0.1.0"
+description = "Find where your repository contradicts itself - runtime versions, package versions, licenses and lockfiles that disagree across files."
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+keywords = ["linter", "consistency", "ci", "devtools", "configuration", "static-analysis"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Environment :: Console",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3 :: Only",
+  "Topic :: Software Development :: Quality Assurance",
+]
+# No runtime dependencies. tomllib is stdlib from 3.11, which is also why that
+# is the floor: a linter you add to CI should not drag a package tree into every
+# repository that adopts it.
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+disagree = "disagree.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/beausome/disagree"
+Issues = "https://github.com/beausome/disagree/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/disagree"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
