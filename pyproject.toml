@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "disagree"
-version = "0.1.0"
+version = "0.1.3"
 description = "Find where your repository contradicts itself - runtime versions, package versions, licenses and lockfiles that disagree across files."
 readme = "README.md"
 requires-python = ">=3.11"

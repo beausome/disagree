@@ -9,7 +9,7 @@ linter passes, and the repository still misleads whoever reads it next.
 
 from __future__ import annotations
 
-__version__ = "0.1.0"
+__version__ = "0.1.3"
 
 from .core import check
 from .model import Claim, Disagreement, Kind, Level, Report, Role

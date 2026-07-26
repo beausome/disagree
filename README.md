@@ -113,7 +113,7 @@ only the Marketplace title differs.
 ```
 
 `v1` is a moving tag that follows the latest `v1.x` release, so you get fixes
-without editing your workflow. Pin to an exact release (`@v0.1.2`) to freeze it.
+without editing your workflow. Pin to an exact release (`@v0.1.3`) to freeze it.
 
 The Marketplace "Use latest version" button generates an exact pin instead —
 GitHub always writes the newest release tag and has no way to know a moving tag
