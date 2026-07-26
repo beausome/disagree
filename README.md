@@ -102,6 +102,32 @@ Exit codes: `0` clean, `1` contradictions, `2` usage error.
 
 ## In CI
 
+Published on the [GitHub Marketplace](https://github.com/marketplace/actions/repo-disagree)
+as **repo-disagree** — the listing name had to be unique and `disagree` was already
+taken. The repository, the CLI command and the pip package are all still `disagree`;
+only the Marketplace title differs.
+
+```yaml
+- name: Check the repo agrees with itself
+  uses: beausome/disagree@v1
+```
+
+`v1` is a moving tag that follows the latest `v1.x` release, so you get fixes
+without editing your workflow. Pin to an exact release (`@v0.1.1`) to freeze it.
+
+Inputs, all optional:
+
+```yaml
+- uses: beausome/disagree@v1
+  with:
+    path: .                 # repository root
+    strict: "true"          # fail on warnings too
+    ignore: |               # one claim kind per line
+      port
+```
+
+Or run the CLI directly:
+
 ```yaml
 - name: Check the repo agrees with itself
   run: pipx run disagree --format github
