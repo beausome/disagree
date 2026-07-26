@@ -1,5 +1,5 @@
-name: disagree
-description: Find where your repository contradicts itself - runtime versions, package versions, licenses and lockfiles that disagree across files.
+name: repo-disagree
+description: Find where your repo contradicts itself - versions, licenses and lockfiles that disagree across files.
 branding:
   icon: git-pull-request
   color: orange
