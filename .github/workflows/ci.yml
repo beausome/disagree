@@ -1,0 +1,75 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ["3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: pip install -e ".[dev]"
+      - run: pytest
+
+  dogfood:
+    # A consistency checker that contradicts itself has no credibility.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: pip install -e .
+      - run: disagree --strict --format github
+
+  action:
+    # Exercise action.yml the way a consumer does - `uses: ./` - not by calling
+    # the CLI. Composite steps run under `set -eo pipefail` and inputs arrive by
+    # a different path, so CLI tests cannot see these bugs.
+    name: Action (as a consumer uses it)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Defaults only: the combination that was broken.
+      - name: Defaults only
+        uses: ./
+
+      - name: All inputs
+        uses: ./
+        with:
+          path: "."
+          strict: "true"
+          ignore: |
+            port
+
+      - name: Build a repo that contradicts itself
+        run: |
+          mkdir -p /tmp/conflict
+          echo "3.9" > /tmp/conflict/.python-version
+          echo "FROM python:3.13-slim" > /tmp/conflict/Dockerfile
+
+      - name: Must fail on a contradictory repo
+        id: conflict
+        uses: ./
+        continue-on-error: true
+        with:
+          path: /tmp/conflict
+
+      - name: Assert it failed
+        run: |
+          if [ "${{ steps.conflict.outcome }}" != "failure" ]; then
+            echo "::error::the action passed a repo pinning two different Python versions"
+            exit 1
+          fi
+          echo "Correctly failed on a self-contradicting repo."
